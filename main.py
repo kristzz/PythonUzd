@@ -3,8 +3,10 @@ from nltk.tokenize import word_tokenize
 from collections import Counter
 import string
 from langdetect import detect, LangDetectException
+from nltk.sentiment.vader import SentimentIntensityAnalyzer
 
 nltk.download('punkt')
+nltk.download('vader_lexicon')
 
 def count_word_frequency():
     text = input("Enter your text: ")
@@ -39,12 +41,31 @@ def word_match_percentage(text1, text2):
     print(f"\nCommon words: {common_words}")
     print(f"Match Percentage: {match_percentage:.2f}%")
 
+def sentiment_analysis():
+    sia = SentimentIntensityAnalyzer()
+
+    text = input("Enter your sentence(s): ")
+
+    sentiment_score = sia.polarity_scores(text)
+    compound_score = sentiment_score['compound']
+
+    if compound_score >= 0.05:
+        sentiment = "Positive"
+    elif compound_score <= -0.05:
+        sentiment = "Negative"
+    else:
+        sentiment = "Neutral"
+    
+    print(f"\nSentiment Analysis Result: {sentiment}")
+    print(f"Sentiment Score: {sentiment_score}")
+
 def main_menu():
     print("\nChoose an action:")
     print("1. Perform Word Frequency Analysis")
     print("2. Detect Language of Text")
     print("3. Check Word Match Between Two Texts")
-    print("4. Exit")
+    print("4. Perform Sentiment Analysis")
+    print("5. Exit")
     
     choice = input("Enter your choice: ")
     
@@ -58,6 +79,8 @@ def main_menu():
             text2 = input("Enter Text 2: ")
             word_match_percentage(text1, text2)
         case "4":
+            sentiment_analysis()
+        case "5":
             print("Exiting the program.")
             exit()
         case _:
